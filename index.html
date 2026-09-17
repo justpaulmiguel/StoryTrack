@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#111318">
+<title>StoryTrack — Media Tracker</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div class="app">
+  <header class="top">
+    <div><div class="logo">Story<span>Track</span></div><div class="sub">Your personal library of stories</div></div>
+    <div class="actions">
+      <input type="file" id="importFile" accept="application/json" style="display:none">
+      <button class="btn" onclick="$('importFile').click()">Import</button>
+      <button class="btn" onclick="exportData()">Export</button>
+      <button class="btn primary" onclick="openAdd()">＋ Add</button>
+    </div>
+  </header>
+  <div class="backupnote" id="backupNote"></div>
+
+  <nav class="tabs" id="primaryTabs">
+    <button class="tab active" data-group="all">All <span class="cnt" id="cnt-all">0</span></button>
+    <button class="tab" data-group="progress">In Progress <span class="cnt" id="cnt-progress">0</span></button>
+    <button class="tab" data-group="backlog">Backlog <span class="cnt" id="cnt-backlog">0</span></button>
+    <button class="tab" data-group="completed">Completed <span class="cnt" id="cnt-completed">0</span></button>
+    <button class="tab" data-group="dropped">Dropped <span class="cnt" id="cnt-dropped">0</span></button>
+  </nav>
+  <nav class="subtabs" id="subTabs" style="display:none">
+    <button class="chip active" data-sub="all">All in progress</button>
+    <button class="chip" data-sub="reading">Reading <span class="cnt" id="cnt-sub-reading">0</span></button>
+    <button class="chip" data-sub="watching">Watching <span class="cnt" id="cnt-sub-watching">0</span></button>
+    <button class="chip" data-sub="ongoing">Ongoing <span class="cnt" id="cnt-sub-ongoing">0</span></button>
+  </nav>
+
+  <section class="hero">
+    <div><h1 id="heading">My Stories</h1><p id="description">Books, movies and series in one place.</p></div>
+    <div class="stats"><div class="stat"><b id="shown">0</b><small>Shown here</small></div><div class="stat"><b id="total">0</b><small>Library total</small></div><div class="stat"><b id="done">0</b><small>Finished</small></div></div>
+  </section>
+
+  <div class="controls"><input class="search" id="search" placeholder="Search title, author, director..."><select id="type"><option value="all">All types</option></select><select id="sort"><option value="updated">Recently updated</option><option value="title">Title A–Z</option><option value="rating">Rating</option></select></div>
+  <main id="grid"></main>
+</div>
+
+<div class="modal" id="modal">
+<div class="dialog">
+<h2 id="modalTitle">Add story</h2>
+<form class="form" id="form">
+<input type="hidden" id="editId">
+<div class="row">
+  <label>Title<input id="fTitle" required></label>
+  <label>Type
+    <select id="fType"></select>
+    <input id="fCustomType" class="inline-extra" placeholder="Enter custom type (e.g. Manga, Podcast)">
+  </label>
+</div>
+<div class="row"><label>Creator / Author<input id="fCreator" placeholder="Author, director, creator"></label><label>Status<select id="fStatus"><option value="want">Want to</option><option value="reading">Reading</option><option value="watching">Watching</option><option value="ongoing">Ongoing / Incomplete</option><option value="finished">Finished</option><option value="dnf">DNF / Dropped</option></select></label></div>
+<div class="row"><label>Progress<input id="fProgress" type="number" min="0" step="any" value="0" placeholder="Current progress"></label><label>Total <span style="opacity:.7">(leave blank if unknown)</span><input id="fTotal" type="number" min="0" step="any" placeholder="Leave blank if unknown"></label></div>
+<div class="row">
+  <label>Progress unit
+    <select id="fUnit"><option value="pages">pages</option><option value="chapters">chapters</option><option value="episodes">episodes</option><option value="volumes">volumes</option><option value="seasons">seasons</option><option value="%">%</option><option value="items">items</option><option value="custom">Custom…</option></select>
+    <input id="fCustomUnit" class="inline-extra" placeholder="Enter custom unit (e.g. levels)">
+  </label>
+  <label>Rating (0–10)<input id="fRating" type="number" min="0" max="10" step=".5" value="0"></label>
+</div>
+<label>Year<input id="fYear" type="number" min="0"></label>
+<label>Cover image URL (optional)<input id="fCover" placeholder="https://..."></label>
+<label>Notes<textarea id="fNotes" placeholder="Thoughts, quotes, where you stopped, etc."></textarea></label>
+<div class="modalfoot"><button type="button" class="btn" onclick="closeModal()">Cancel</button><button class="btn primary">Save</button></div>
+</form>
+</div></div>
+
+<script src="js/data.js"></script>
+<script src="js/utils.js"></script>
+<script src="js/data-types.js"></script>
+<script src="js/storage.js"></script>
+<script src="js/ui.js"></script>
+<script src="js/google-drive.js"></script>
+<script src="js/app.js"></script>
+</body></html>
