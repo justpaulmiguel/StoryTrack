@@ -20,3 +20,34 @@ h1,h2,h3,p{margin-top:0}.hero h1{margin-bottom:6px}.hero p{color:var(--muted);ma
 .inline-extra{display:none;margin-top:8px}
 @media(max-width:650px){.hero{grid-template-columns:1fr}.stats{width:100%}.stat{flex:1}.row{grid-template-columns:1fr}.controls{flex-wrap:wrap}.controls select{height:42px}.top{flex-wrap:wrap}.actions{flex-wrap:wrap}.actions .btn{padding:9px 11px;font-size:13px}}
 .drive-status{font-size:12px;color:var(--muted);margin:-10px 0 16px}.drive-status.good{color:var(--good)}.drive-status.bad{color:var(--danger)}.drive-status.working{color:var(--accent)}#driveSync:disabled{opacity:.6;cursor:wait}
+
+/* Compact library grid + tap-to-open details */
+.grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.card{cursor:pointer;transition:transform .15s ease,border-color .15s ease;background:var(--panel)}
+.card:hover{transform:translateY(-2px);border-color:#464d5d}
+.card:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.card .cover{height:auto;aspect-ratio:2/3;max-height:none;background:#20242d;background-size:cover;background-position:center;border:0}
+.card .cover b{font-size:30px}
+.card .body{padding:9px 8px 11px}
+.card .type,.card .meta,.card .badge,.card .progress,.card .cardfoot{display:none}
+.card .title{font-size:13px;line-height:1.25;margin:0;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;min-height:2.5em}
+.detail-dialog{padding:14px;max-width:620px}
+.detail-head{display:flex;justify-content:flex-end;margin-bottom:2px}
+.icon-btn{background:transparent;color:var(--muted);font-size:20px;padding:5px 8px;border-radius:8px}
+.icon-btn:hover{background:var(--panel2);color:var(--text)}
+.detail-top{display:grid;grid-template-columns:120px 1fr;gap:16px;align-items:start}
+.detail-cover{width:120px;aspect-ratio:2/3;border-radius:10px;background:#20242d;background-size:cover;background-position:center;display:flex;align-items:center;justify-content:center}
+.detail-cover b{font-size:36px}
+.detail-title{font-size:22px;font-weight:800;margin:2px 0 5px}
+.detail-type{font-size:11px;text-transform:uppercase;color:var(--accent);font-weight:700}
+.detail-creator{color:var(--muted);margin-bottom:10px}
+.detail-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:15px}
+.detail-item{background:var(--panel2);border:1px solid var(--line);border-radius:10px;padding:10px}
+.detail-item small{display:block;color:var(--muted);font-size:11px;margin-bottom:3px}
+.detail-item b{font-size:14px}
+.detail-progress{margin-top:15px}
+.detail-progress .meta{display:block;color:var(--muted);font-size:12px}
+.detail-notes{margin-top:15px;background:var(--panel2);border:1px solid var(--line);border-radius:10px;padding:11px;white-space:pre-wrap;line-height:1.45}
+.detail-actions{display:flex;gap:8px;margin-top:15px}
+.detail-actions .btn{flex:1}
+@media(max-width:650px){.app{padding-left:10px;padding-right:10px}.grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}.card .body{padding:8px 6px 9px}.card .title{font-size:12px}.detail-top{grid-template-columns:90px 1fr;gap:12px}.detail-cover{width:90px}.detail-title{font-size:18px}.detail-grid{grid-template-columns:1fr 1fr}.detail-actions{flex-wrap:wrap}.detail-actions .btn{min-width:calc(50% - 4px)}}
