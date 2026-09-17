@@ -50,6 +50,43 @@ function removeItem(id){if(confirm("Delete this item?")){items=items.filter(i=>i
 function statusText(s){return {want:"Want to read/watch",reading:"Currently reading",watching:"Currently watching",finished:"Finished",dnf:"DNF / Dropped"}[s]||"Unknown"}
 function storyStatusText(s){return {ongoing:"Ongoing",completed:"Completed",hiatus:"Hiatus",cancelled:"Cancelled",unknown:"Story status not set"}[s]||"Story status not set"}
 
+function openDetails(id){
+  let x=items.find(i=>i.id===id); if(!x)return;
+  let u=effectiveUnit(x), pct=progressPct(x), progress=progressLabel(x);
+  let cover=x.cover?`style="background-image:url('${x.cover.replaceAll("'","%27")}')"`:"";
+  let progressBlock="";
+  if(pct!=null){
+    progressBlock=`<div class="detail-progress"><div class="meta">Progress · ${esc(progress)}${u!=="%"?` · ${pct}%`:""}</div><div class="progress"><i style="width:${pct}%"></i></div></div>`;
+  }else if(x.progress){
+    progressBlock=`<div class="detail-progress"><div class="meta">Progress · ${esc(progress)}</div></div>`;
+  }
+  $("detailContent").innerHTML=`
+    <div class="detail-top">
+      <div class="detail-cover" ${cover}>${x.cover?"":`<b>${typeIcon(x.type)}</b>`}</div>
+      <div>
+        <div class="detail-type">${esc(x.type)}</div>
+        <div class="detail-title">${esc(x.title)}</div>
+        <div class="detail-creator">${esc(x.creator||"No creator/author added")}${x.year?` · ${x.year}`:""}</div>
+        <span class="badge">${statusText(x.status)}</span>
+      </div>
+    </div>
+    <div class="detail-grid">
+      <div class="detail-item"><small>Your status</small><b>${esc(statusText(x.status))}</b></div>
+      <div class="detail-item"><small>Story status</small><b>${esc(storyStatusText(x.storyStatus))}</b></div>
+      <div class="detail-item"><small>Progress unit</small><b>${esc(u)}</b></div>
+      <div class="detail-item"><small>Rating</small><b>${x.rating?`★ ${x.rating}/10`:"Not rated"}</b></div>
+    </div>
+    ${progressBlock}
+    ${x.notes?`<div class="detail-notes"><strong>Notes</strong><br>${esc(x.notes)}</div>`:""}
+    <div class="detail-actions">
+      <button class="btn primary" onclick="closeDetails();editItem('${x.id}')">Edit</button>
+      <button class="btn danger" onclick="closeDetails();removeItem('${x.id}')">Delete</button>
+      <button class="btn" onclick="closeDetails()">Close</button>
+    </div>`;
+  $("detailModal").classList.add("show");
+}
+function closeDetails(){$("detailModal").classList.remove("show")}
+
 function render(){
   populateTypeSelects();
   let q=$("search").value.toLowerCase(),t=$("type").value,s=$("sort").value;
@@ -77,28 +114,14 @@ function render(){
     backlog:["Backlog","Things you want to get to."],
     completed:["Completed","Stories you've finished."],
     dropped:["Dropped","Stuff you decided not to continue."],
-    progress:{
-      all:["In Progress","Everything you're actively reading, watching or following."],
-      reading:["Reading","Books you're currently reading."],
-      watching:["Watching","Movies and series you're currently watching."],
-      ongoing:["Ongoing Stories","Stories that are still being published or released."]
-    }
+    progress:{all:["In Progress","Everything you're actively reading, watching or following."],reading:["Reading","Books you're currently reading."],watching:["Watching","Movies and series you're currently watching."],ongoing:["Ongoing Stories","Stories that are still being published or released."]}
   };
-  let [h,d]= group==="progress" ? heading.progress[sub] : heading[group];
+  let [h,d]=group==="progress"?heading.progress[sub]:heading[group];
   $("heading").textContent=h;$("description").textContent=d;
   if(!filtered.length){$("grid").innerHTML='<div class="empty">Nothing here yet.<br><br><button class="btn primary" onclick="openAdd()">＋ Add your first story</button></div>';return}
   $("grid").innerHTML='<div class="grid">'+filtered.map(x=>{
-    let u=effectiveUnit(x);
-    let known=u==="%"||(x.total!=null&&x.total>0);
-    let progressHtml="";
-    if(known){
-      let pct=progressPct(x);
-      progressHtml=`<div class="progress"><i style="width:${pct}%"></i></div><div class="meta">${progressLabel(x)}${u!=="%"?` · ${pct}%`:""}</div>`;
-    }else if(x.progress){
-      progressHtml=`<div class="progress ongoing"><i></i></div><div class="meta">${progressLabel(x)}</div>`;
-    }
-    return `<article class="card"><div class="cover" ${x.cover?`style="background-image:url('${x.cover.replaceAll("'","%27")}')"`:""}>${x.cover?"":`<b>${typeIcon(x.type)}</b>`}</div><div class="body"><div class="type">${esc(x.type)}</div><div class="title">${esc(x.title)}</div><div class="meta">${esc(x.creator||"—")}${x.year?" · "+x.year:""}</div><span class="badge">${statusText(x.status)}</span><div class="meta">${storyStatusText(x.storyStatus)}</div>${progressHtml}${x.rating?`<div class="meta" style="margin-top:7px">★ ${x.rating}/10</div>`:""}<div class="cardfoot"><button class="small" onclick="editItem('${x.id}')">Edit</button><button class="small danger" onclick="removeItem('${x.id}')">Delete</button></div></div></article>`;
-  }).join("")+'</div>'
+    return `<article class="card" role="button" tabindex="0" onclick="openDetails('${x.id}')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openDetails('${x.id}')}"><div class="cover" ${x.cover?`style="background-image:url('${x.cover.replaceAll("'","%27")}')"`:""}>${x.cover?"":`<b>${typeIcon(x.type)}</b>`}</div><div class="body"><div class="title">${esc(x.title)}</div></div></article>`;
+  }).join('')+'</div>';
 }
 
 document.querySelectorAll("#primaryTabs .tab").forEach(b=>b.onclick=()=>{
