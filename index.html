@@ -15,10 +15,12 @@
       <input type="file" id="importFile" accept="application/json" style="display:none">
       <button class="btn" onclick="$('importFile').click()">Import</button>
       <button class="btn" onclick="exportData()">Export</button>
+      <button class="btn" id="driveSync" onclick="syncToDrive()">☁ Drive Sync</button>
       <button class="btn primary" onclick="openAdd()">＋ Add</button>
     </div>
   </header>
   <div class="backupnote" id="backupNote"></div>
+  <div class="drive-status" id="driveStatus">Drive: Not synced</div>
 
   <nav class="tabs" id="primaryTabs">
     <button class="tab active" data-group="all">All <span class="cnt" id="cnt-all">0</span></button>
